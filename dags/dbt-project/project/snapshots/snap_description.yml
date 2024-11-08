@@ -1,0 +1,6 @@
+snapshots:
+  - name: dim_product
+    description: '{{ doc("dim_product") }}'
+    columns:
+      - name: category_description
+        description: The category_description field provides a detailed explanation of each product category, enhancing understanding and context for the types of products included in the Northwind Sample Database.

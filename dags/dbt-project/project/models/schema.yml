@@ -1,0 +1,85 @@
+version: 2
+
+
+models:
+  - name: dim_product
+    columns:
+      - name: category_description
+        tests:
+          - not_null
+          - not_accepted_values:
+              values: ['A']
+          - dbt_expectations.expect_column_values_to_be_of_type:
+                column_type: Varchar
+      
+      - name: product_id
+        tests:
+          - unique
+          - relationships:
+              to: ref('fact_silver')
+              field: 'product_id'
+    tests:
+      - dbt_expectations.expect_table_row_count_to_equal_other_table:
+            compare_model: ref('product_silver')
+            group_by: ['product_id']
+            compare_group_by: ['product_id']
+            row_condition: "product_id is not null"
+            compare_row_condition: "product_id is not null"
+
+  - name: dim_employee
+    columns:
+      - name: employee_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('fact_silver')
+              field: 'employee_id'
+          - dbt_expectations.expect_column_values_to_be_of_type:
+                column_type: Number
+      
+      - name: title_of_courtesy
+        tests:
+          - dbt_expectations.expect_column_values_to_be_in_set:
+                value_set: ['Dr.','Ms.','Mrs.','Mr.']
+                quote_values: true
+                row_condition: "title_of_courtesy is not null"
+
+    tests:
+      - dbt_expectations.expect_table_row_count_to_equal_other_table:
+            compare_model: ref('employee_silver')
+            group_by: ['employee_id']
+            compare_group_by: ['employee_id']
+            row_condition: "employee_id is not null"
+            compare_row_condition: "employee_id is not null"
+
+  - name: dim_customer
+    columns:
+      - name: customer_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('fact_silver')
+              field: 'customer_id'
+          - dbt_expectations.expect_column_values_to_be_of_type:
+                column_type: Varchar
+    tests:
+      - dbt_expectations.expect_table_row_count_to_equal_other_table:
+            compare_model: ref('customer_silver')
+            group_by: ['customer_id']
+            compare_group_by: ['customer_id']
+            row_condition: "customer_id is not null"
+            compare_row_condition: "customer_id is not null"
+
+  - name: fact
+    description: '{{doc("fact_desription")}}'
+    columns:
+      - name : order_date
+        tests:
+          - not_null
+    tests:
+      - dbt_expectations.expect_column_pair_values_A_to_be_greater_than_B:
+                column_A: shipped_date
+                column_B: order_date
+                or_equal: true
+              
+

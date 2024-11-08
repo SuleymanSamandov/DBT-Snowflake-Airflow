@@ -1,0 +1,28 @@
+version: 2
+
+sources:
+  - name: data
+    database: data
+    schema: raw
+    tables:
+
+      - name: products
+        identifier: products
+      
+      - name: categories
+        identifier: categories
+      
+      - name: customers
+        identifier: customers
+
+      - name: employees
+        identifier: employees
+
+      - name: orders
+        identifier: orders
+
+      - name: order_details
+        identifier: order_details
+        
+    
+      

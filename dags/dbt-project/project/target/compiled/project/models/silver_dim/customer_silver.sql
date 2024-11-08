@@ -1,0 +1,23 @@
+
+
+
+WITH  __dbt__cte__customer as (
+WITH CSTMR AS(
+    SELECT * 
+    FROM data.raw.customers
+)
+
+SELECT * FROM CSTMR
+), CUSTOMER AS (
+    SELECT * FROM __dbt__cte__customer
+)
+
+SELECT 
+CUSTOMER_ID,
+COMPANY_NAME,
+CONTACT_NAME,
+CONTACT_TITLE,
+CITY,
+COALESCE(REGION,'Not entered') AS REGION,
+COUNTRY 
+FROM CUSTOMER
